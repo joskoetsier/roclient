@@ -1,0 +1,128 @@
+- Queue: pyramid
+  Host: 127.0.0.1
+  Job:
+    Executable: /usr/bin/java
+    Output: /exports/home/jkoetsie/outhost.txt
+    Error: /exports/home/jkoetsie/outerr.txt
+    Arguments: ["-jar", "romio.jar", "pyramid", "/exports/home/jkoetsie/pyramid/omero/target/target/test", "${ID}", "${H}", "${V}", "1", "1", "3", "uint8"]  
+    WorkingDirectory: /exports/home/jkoetsie/ 
+    Queue: ecdf
+    Pe: memory-2G
+  Service: 
+    Name: eddie 
+    Resource: sge 
+    Connection: ssh 
+    Host: frontend03.ecdf.ed.ac.uk
+    UserId: jkoetsie 
+    UserKey: /Users/jos/.ssh/id_rsa 
+    Pollingtime: 5   
+- Queue: pyramidft
+  Host: 127.0.0.1
+  Files:
+    - Source:
+       URL:  file:///Users/jos/${ID}  
+      Target:
+       URL:  sftp://frontend03.ecdf.ed.ac.uk//exports/home/jkoetsie/pyramid/omero/target/target/test/${ID}
+       UserId: jkoetsie
+       UserKey: /Users/jos/.ssh/id_rsa
+  
+- Queue: eddie
+  Host: 127.0.0.1
+  Job: 
+    Executable: /bin/hostname
+    Output: /exports/home/jkoetsie/outhost.txt
+    Error: /exports/home/jkoetsie/outerr.txt
+    #Arguments: ["/","/Users/jos"] 
+    #Environment: {"PATH":"/usr/bin"} 
+    WorkingDirectory: /exports/home/jkoetsie/ 
+    Queue: ecdf
+    #WallTimeLimit:   
+    #Contact: 
+    #Name: 
+    #TotalCPUCount: 8
+    #NumberOfProcesses: 
+    #SPMDVariation: 8
+    #Project: 
+    #FileTransfer: 
+  Service: 
+    Name: eddie 
+    Resource: sge 
+    Connection: ssh 
+    Host: frontend03.ecdf.ed.ac.uk
+    UserId: jkoetsie 
+    UserKey: /Users/jos/.ssh/id_rsa 
+    Pollingtime: 5
+- Queue: file-queue
+  Host: 127.0.0.1
+  Files:
+    - Source:
+       URL:  sftp://the-arctic.no-ip.org/home/arcticfox/input.txt
+       UserId: arcticfox
+       UserKey: /Users/jos/.ssh/id_rsa.pub
+      Target:
+       URL:  file:///Users/jos/output.txt   
+    - Source:
+       URL: file:///Users/jos/${name}
+      Target:
+       URL: file:///Users/jos/blog2
+- Queue: fq
+  Host: 127.0.0.1
+  Files:
+    - Source:
+       URL: file:///tmp/input.txt
+      Target:
+       URL:  sftp://frontend03.ecdf.ed.ac.uk/exports/home/jkoetsie
+       UserId: jkoetsie
+       UserKey: /Users/jos/id_rsa
+- Queue: job-queue
+  Host: 127.0.0.1
+  Job: 
+    Executable: /bin/sleep 5;/bin/ls 
+    #Output: /tmp/out.txt 
+    Error: /tmp/err.txt 
+    #Arguments: ["/","/Users/jos"] 
+    Environment: {"PATH":"/usr/bin"} 
+    #WorkingDirectory: 
+    #Queue: 
+    #WallTimeLimit:   
+    #Contact: 
+    #Name: 
+    #TotalCPUCount: 
+    #NumberOfProcesses: 
+    #SPMDVariation: 
+    #Project: 
+    #FileTransfer: 
+  Service: 
+    Name: jos 
+    Resource: fork 
+    Connection: ssh 
+    Host: 127.0.0.1 
+    UserId: jos 
+    UserKey: /home/jos/.ssh/id_rsa 
+    Pollingtime: 10
+- Queue: job-queue2
+  Host: 127.0.0.1
+  Job: 
+    Executable: /bin/ls
+    #Output: 
+    Error: /tmp/err4.txt 
+    #Arguments:  
+    #Environment: 
+    #WorkingDirectory: 
+    Queue: all.q
+    #WallTimeLimit:   
+    #Contact: 
+    #Name: 
+    #TotalCPUCount: 
+    #NumberOfProcesses: 
+    #SPMDVariation: 
+    #Project: 
+    #FileTransfer: 
+  Service: 
+    Name: jos 
+    Resource: sge 
+    Connection: ssh 
+    Host: localhost 
+    UserId: jos 
+    UserKey: /home/jos/.ssh/rsa_pub 
+    Pollingtime: 5
