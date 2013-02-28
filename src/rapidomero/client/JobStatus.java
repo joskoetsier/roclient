@@ -1,6 +1,10 @@
 package rapidomero.client;
 
-
+/**
+ * Class encapsulates the status of the job
+ * @author jos
+ *
+ */
 public class JobStatus 
 {
 	public String getStatus() {

@@ -11,12 +11,22 @@ import java.util.Vector;
 
 import org.yaml.snakeyaml.Yaml;
 
+/**
+ * Class to manage the YAML configuration file
+ * @author jos
+ *
+ */
 public class Configuration 
 {
 	private Map<String, Map<String, Object>> data = new HashMap<String, Map<String, Object>>();
 	private Yaml yaml = new Yaml();
 	
-	public static Object keysToLowercase(Object in)
+	/**
+	 * Helper function. Turns all keys to lowercase, making the YAML file more forgiving
+	 * @param in YAML to turn into lowercase keys
+	 * @return result YAML
+	 */
+	private static Object keysToLowercase(Object in)
 	{
 		if (in instanceof List)
 		{
@@ -40,6 +50,11 @@ public class Configuration
 		return in;
 	}
 	
+	/**
+	 * Reads the YAML configuration file
+	 * @param file
+	 * @throws FileNotFoundException
+	 */
 	public void readFile(String file) throws FileNotFoundException
 	{
 		InputStream input = new FileInputStream(new File(file));
@@ -50,11 +65,20 @@ public class Configuration
 		
 	}
 	
+	/**
+	 * Converts this configuration file to text
+	 */
 	public String toString()
 	{
 		return this.yaml.dump(this.data);
 	}
 	
+	/**
+	 * Gets the hostname of a queue
+	 * @param queue
+	 * @return
+	 * @throws JobException
+	 */
 	public String getHost(String queue) throws JobException
 	{
 		if (this.data==null || this.data.get(queue)==null)
@@ -62,18 +86,36 @@ public class Configuration
 		return (String) this.data.get(queue).get("host");
 	}
 
+	/**
+	 * Gets the username of a queue
+	 * @param queue
+	 * @return
+	 * @throws JobException
+	 */
 	public String getUsername(String queue) throws JobException
 	{		
 		if (this.data==null || this.data.get(queue)==null)
 			throw new JobException("Invalid data");
 		return (String) this.data.get(queue).get("username");
 	}
+	/**
+	 * Gets the password associated with a queue
+	 * @param queue
+	 * @return
+	 * @throws JobException
+	 */
 	public String getPassword(String queue) throws JobException
 	{	
 		if (this.data==null || this.data.get(queue)==null)
 			throw new JobException("Invalid data");
 		return (String) this.data.get(queue).get("password");
 	}
+	/**
+	 * Optional port number to contact queue at
+	 * @param queue
+	 * @return
+	 * @throws JobException
+	 */
 	public int getPort(String queue) throws JobException
 	{	
 		if (this.data==null || this.data.get(queue)==null)

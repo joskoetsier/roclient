@@ -5,6 +5,11 @@ import java.util.Map;
 
 import org.yaml.snakeyaml.Yaml;
 
+/**
+ * A job, encoded as a set of key-value pairs.
+ * @author jos
+ *
+ */
 public class Job {	
 
 	private Map<String, String> variables = new HashMap<String, String>();

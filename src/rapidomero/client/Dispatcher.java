@@ -14,21 +14,39 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 
+/**
+ * Dispatches jobs to a queue
+ * @author jos
+ *
+ */
 public class Dispatcher
 {
 	private ConnectionFactory factory = new ConnectionFactory();
 	private Connection connection;
 	private Configuration configuration = new Configuration();
 	private String jobDescription = null;
-	private final JobStatusHandler handler;
 
-	public Dispatcher(String filename, JobStatusHandler handler) throws IOException
+	/**
+	 * Constructor. 
+	 * @param filename filename of the YAML configuration file
+ 	 * @param handler callback object to call if the job status changes
+	 * @throws IOException
+	 */
+	public Dispatcher(String filename) throws IOException
 	{
 		this.configuration.readFile(filename);
-		this.handler = handler;
 	}
 
-	public void sendJob(String queue, Job job) throws FileNotFoundException, IOException, JobException
+	/**
+	 * send a job to a queue
+	 * @param queue name of the queue to send the job to
+	 * @param job Job to send
+	 * @param handler callback object
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws JobException
+	 */
+	public void sendJob(String queue, Job job, final JobStatusHandler handler) throws FileNotFoundException, IOException, JobException
 	{
 		factory.setHost(this.configuration.getHost(queue));
 		this.connection = factory.newConnection();
@@ -69,6 +87,10 @@ public class Dispatcher
 
 	}
 
+	/**
+	 * the job handler - or queue to listen to replies
+	 * @return
+	 */
 	public String getJobDescription()
 	{
 		return jobDescription;
